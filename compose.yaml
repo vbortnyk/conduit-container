@@ -51,13 +51,6 @@ services:
       timeout: 10s
     volumes:
      - db_data:/var/lib/postgresql/data
-
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: unless-stopped
-    ports:
-      - "8181:8080"
     
 volumes:
   db_data:
