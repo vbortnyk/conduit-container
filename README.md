@@ -1,8 +1,8 @@
 # Conduit Infrastructure
 
-This project is a full-stack web application built with Django REST Framework for the backend and Angular for the frontend. It implements a modern, API-driven architecture inspired by the Conduit (RealWorld) specification, including features such as user authentication, article publishing, and social interactions.
+This project is a full-stack web application built with Django REST Framework for the backend and Angular for the frontend. The frontend and backend are maintained in separate repositories, which are integrated and orchestrated using Docker Compose. It implements a modern, API-driven architecture inspired by the Conduit (RealWorld) specification, including features such as user authentication, article publishing, and social interactions.
 
-The application is containerized using Docker and orchestrated with Docker Compose, enabling a consistent and reproducible development and deployment environment. An Nginx reverse proxy is used to route requests between the frontend and backend services.
+The application is containerized using Docker and orchestrated with Docker Compose, enabling a consistent and reproducible development and deployment environment. An Nginx reverse proxy is used to route requests between the frontend and backend services. PostgreSQL is used as the data storage.
 
 ## Table of Contents
 
@@ -24,15 +24,16 @@ Before running this project, make sure you have the following installed:
 
 ### Clone the repository:
    ```bash
-   $ git clone git@github.com:vbortnyk/conduit.git
-   $ cd conduit
+      $ git clone --recurse-submodules git@github.com:vbortnyk/conduit-infra.git
+      $ cd conduit-infra
+      $ git submodule update --remote
    ```
 
-Confgurations details for each part canbe fount here:
+Confguration details for each part can be found here:
 - [Angular app README](#https://github.com/vbortnyk/conduit-frontend/blob/master/README.md)
 - [Django app README](#https://github.com/vbortnyk/conduit-backend/blob/master/README.md)
 
-The .env-template file contains all required environment variables with default values. Rename it to .env and adjust the values according to your local setup
+The `.env-template` file contains all required environment variables with default values. Rename it to .env and adjust the values according to your local setup
 ```bash
 BACKEND_PORT=
 FRONTEND_PORT=
@@ -44,8 +45,6 @@ DATABASE_PASSWORD=
 ALLOWED_HOSTS=
 ```
 Make sure you use secure data.
-
-For 
 
 ### Start the stack using Docker Compose:
 ```bash
@@ -80,4 +79,4 @@ Containers communicate using service names as hostnames
 
 For setting a custom port for your app:
 ```bash
-FRONTEND_PORT=<custom-port> docker compse up -d
+FRONTEND_PORT=<custom-port> docker compose up -d
