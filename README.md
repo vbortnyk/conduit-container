@@ -1,4 +1,4 @@
-# Conduit
+# Conduit Infrastructure
 
 This project is a full-stack web application built with Django REST Framework for the backend and Angular for the frontend. It implements a modern, API-driven architecture inspired by the Conduit (RealWorld) specification, including features such as user authentication, article publishing, and social interactions.
 
