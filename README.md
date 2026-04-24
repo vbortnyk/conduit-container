@@ -34,16 +34,7 @@ Confguration details for each part can be found here:
 - [Django app README](#https://github.com/vbortnyk/conduit-backend/blob/master/README.md)
 
 The `.env-template` file contains all required environment variables with default values. Rename it to .env and adjust the values according to your local setup
-```bash
-BACKEND_PORT=
-FRONTEND_PORT=
 
-DATABASE_NAME=
-DATABASE_USERNAME=
-DATABASE_PASSWORD=
-
-ALLOWED_HOSTS=
-```
 Make sure you use secure data.
 
 ### Start the stack using Docker Compose:
@@ -68,7 +59,7 @@ $ docker compose up -d
 
 The database (Postgres) stores its data in a Docker volume mounted to: /var/lib/postgresql/data
 
-Additionally, the services are configures with the restart policy unless-stopped
+Additionally, the services are configured with the restart policy unless-stopped
 
 This configuration ensures that containers automatically restart after as system reboot or Docker restart, unless they are manually stopped.
 

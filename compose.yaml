@@ -19,7 +19,11 @@ services:
     expose:
       - "${BACKEND_PORT}"
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import socket; s=socket.socket(); exit(0 if s.connect_ex(('localhost', 8000)) == 0 else 1)\""]
+      test: [
+        "CMD", "python", "-c", "import socket,os; s=socket.socket();
+        s.settimeout(1);
+        exit(s.connect_ex(('localhost', int(os.getenv('BACKEND_PORT', 8000)))))"
+      ] 
       interval: 10s
       timeout: 3s
       retries: 3
@@ -37,7 +41,7 @@ services:
       DATABASE_PORT: 5432
 
   db:
-    image: postgres:14-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USERNAME}
