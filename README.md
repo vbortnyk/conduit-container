@@ -1,4 +1,4 @@
-# Conduit Infrastructure
+# Conduit Container
 
 This project is a full-stack web application built with Django REST Framework for the backend and Angular for the frontend. The frontend and backend are maintained in separate repositories, which are integrated and orchestrated using Docker Compose. It implements a modern, API-driven architecture inspired by the Conduit (RealWorld) specification, including features such as user authentication, article publishing, and social interactions.
 
@@ -24,8 +24,8 @@ Before running this project, make sure you have the following installed:
 
 ### Clone the repository:
    ```bash
-      $ git clone --recurse-submodules git@github.com:vbortnyk/conduit-infra.git
-      $ cd conduit-infra
+      $ git clone --recurse-submodules git@github.com:vbortnyk/conduit-container.git
+      $ cd conduit-container
       $ git submodule update --remote
    ```
 
