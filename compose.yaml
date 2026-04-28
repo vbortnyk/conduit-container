@@ -1,0 +1,60 @@
+services: 
+  frontend:
+    build:
+      context: conduit-frontend
+      dockerfile: Dockerfile
+    ports:
+      - ${FRONTEND_PORT}:80
+    container_name: conduit-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: conduit-backend
+      dockerfile: Dockerfile
+    container_name: conduit-backend
+    expose:
+      - "${BACKEND_PORT}"
+    healthcheck:
+      test: [
+        "CMD", "python", "-c", "import socket,os; s=socket.socket();
+        s.settimeout(1);
+        exit(s.connect_ex(('localhost', int(os.getenv('BACKEND_PORT', 8000)))))"
+      ] 
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+    volumes:
+     - db_data:/var/lib/postgresql/data
+    
+volumes:
+  db_data:
