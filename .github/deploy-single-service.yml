@@ -1,0 +1,31 @@
+name: Service deployment
+
+on: 
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+
+      service:
+        required: true
+        type: string    
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ vars.VPS_HOST }}
+          username: ${{ vars.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
+              -u "${{ vars.GH_USERNAME }}" \
+              --password-stdin
+
+            cd projects/conduit-container
+            TAG=${{ inputs.tag }} docker compose pull ${{ inputs.service }}
+            TAG=${{ inputs.tag }} docker compose up -d --no-deps --force-recreate ${{ inputs.service }}
