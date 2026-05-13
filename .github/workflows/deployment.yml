@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - deploy-configuration-to-VPS
     paths:
       - '.github/workflows/deployment.yml'
 
