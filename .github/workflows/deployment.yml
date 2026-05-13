@@ -1,0 +1,48 @@
+name: Deploy
+
+on:  
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/deployment.yml'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with: 
+          registry: ghcr.io
+          username: ${{ vars.GH_USERNAME }}
+          password: ${{ secrets.GH_PAT }} 
+
+      - name: Build and push all to GHCR        
+        run: |
+          echo "Full build and push to GHCR"
+          git submodule update --init --recursive 
+          TAG=${{ github.sha }} docker compose build
+          TAG=${{ github.sha }} docker compose push
+          
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ vars.VPS_HOST }}
+          username: ${{ vars.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
+              -u "${{ vars.GH_USERNAME }}" \
+              --password-stdin
+
+            cd projects/conduit-container
+            TAG=${{ github.sha }} docker compose pull
+            TAG=${{ github.sha }} docker compose up -d --force-recreate
