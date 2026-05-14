@@ -46,14 +46,14 @@ jobs:
 
             cd projects/conduit-container
 
-            BACKEND_PORT=${{ vars.BACKEND_PORT }} 
-            FRONTEND_PORT=${{ vars.FRONTEND_PORT }} 
-            DATABASE_NAME=${{ vars.DATGABASE_NAME }} 
-            DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} 
-            DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} 
-            ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }} 
-            REPOSITORY_OWNER=${{ github.repository_owner }} 
-            TAG=${{ github.sha }} 
+            export BACKEND_PORT=${{ vars.BACKEND_PORT }} 
+            export FRONTEND_PORT=${{ vars.FRONTEND_PORT }} 
+            export DATABASE_NAME=${{ vars.DATABASE_NAME }} 
+            export DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} 
+            export DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} 
+            export ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }} 
+            export REPOSITORY_OWNER=${{ github.repository_owner }} 
+            export TAG=${{ github.sha }} 
             
             docker compose pull
             docker compose up -d --force-recreate
