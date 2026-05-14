@@ -41,11 +41,21 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             echo "${{ secrets.GH_PAT }}" | docker login ghcr.io \
-              -u "${{ vars.GH_USERNAME }}" \
+              -u "${{ github.repository_owner }}" \
               --password-stdin
 
             cd projects/conduit-container
-            TAG=${{ github.sha }} docker compose pull
-            TAG=${{ github.sha }} docker compose up -d --force-recreate
+
+            BACKEND_PORT=${{ vars.BACKEND_PORT }} 
+            FRONTEND_PORT=${{ vars.FRONTEND_PORT }} 
+            DATABASE_NAME=${{ vars.DATGABASE_NAME }} 
+            DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} 
+            DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} 
+            ALLOWED_HOSTS=${{ vars.ALLOWED_HOSTS }} 
+            REPOSITORY_OWNER=${{ github.repository_owner }} 
+            TAG=${{ github.sha }} 
+            
+            docker compose pull
+            docker compose up -d --force-recreate
 
             
